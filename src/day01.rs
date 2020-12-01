@@ -1,36 +1,21 @@
+use itertools::Itertools;
+
+const DESIRED_SUM: usize = 2020;
+
+fn solution(input: &[usize], length: usize) -> Option<usize> {
+  input
+    .iter()
+    .combinations(length)
+    .find(|combo| combo.iter().copied().sum::<usize>() == DESIRED_SUM)
+    .map(|combo| combo.iter().copied().product::<usize>())
+}
+
 pub fn first_star(input: &[usize]) -> Option<usize> {
-  let len = input.len();
-  for i in 0..len {
-    for j in i + 1..len {
-      let a = input[i];
-      let b = input[j];
-
-      if a + b == 2020 {
-        return Some(a * b);
-      }
-    }
-  }
-
-  None
+  solution(input, 2)
 }
 
 pub fn second_star(input: &[usize]) -> Option<usize> {
-  let len = input.len();
-  for i in 0..len {
-    for j in i + 1..len {
-      for k in j + 1..len {
-        let a = input[i];
-        let b = input[j];
-        let c = input[k];
-
-        if a + b + c == 2020 {
-          return Some(a * b * c);
-        }
-      }
-    }
-  }
-
-  None
+  solution(input, 3)
 }
 
 #[cfg(test)]
