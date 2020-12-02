@@ -20,7 +20,7 @@ pub fn second_star(input: &[usize]) -> Option<usize> {
 
 #[cfg(test)]
 mod tests {
-  use super::{first_star, second_star};
+  use super::*;
 
   const fn sample_data() -> [usize; 6] {
     return [1721, 979, 366, 299, 675, 1456];
