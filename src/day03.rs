@@ -1,10 +1,12 @@
-pub fn trees_hit(pattern: &[&str], slope_right: usize, slope_down: usize) -> usize {
+pub fn trees_hit(pattern: &[&str], slope: (usize, usize)) -> usize {
+  let (dy, dx) = slope;
+
   pattern
     .iter()
-    .step_by(slope_down)
+    .step_by(dy)
     .enumerate()
     .map(|(i, &line)| {
-      let x = slope_right * i % line.len();
+      let x = dx * i % line.len();
       let c = line.chars().nth(x).unwrap();
 
       if c == '.' {
@@ -17,15 +19,14 @@ pub fn trees_hit(pattern: &[&str], slope_right: usize, slope_down: usize) -> usi
 }
 
 pub fn first_star(pattern: &[&str]) -> usize {
-  trees_hit(pattern, 3, 1)
+  trees_hit(pattern, (3, 1))
 }
 
 pub fn second_star(pattern: &[&str]) -> usize {
-  trees_hit(pattern, 1, 1)
-    * trees_hit(pattern, 3, 1)
-    * trees_hit(pattern, 5, 1)
-    * trees_hit(pattern, 7, 1)
-    * trees_hit(pattern, 1, 2)
+  [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
+    .iter()
+    .map(|&slope| trees_hit(pattern, slope))
+    .product()
 }
 
 #[cfg(test)]
