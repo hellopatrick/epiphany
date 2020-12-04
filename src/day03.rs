@@ -1,28 +1,22 @@
-pub fn trees_hit(pattern: &[&str], slope: (usize, usize)) -> usize {
-  let (dy, dx) = slope;
+pub fn trees_hit(pattern: &[Vec<bool>], slope: (usize, usize)) -> usize {
+  let (dx, dy) = slope;
 
   pattern
     .iter()
     .step_by(dy)
     .enumerate()
-    .map(|(i, &line)| {
+    .filter(|(i, line)| {
       let x = dx * i % line.len();
-      let c = line.chars().nth(x).unwrap();
-
-      if c == '.' {
-        0
-      } else {
-        1
-      }
+      line[x]
     })
-    .sum()
+    .count()
 }
 
-pub fn first_star(pattern: &[&str]) -> usize {
+pub fn first_star(pattern: &[Vec<bool>]) -> usize {
   trees_hit(pattern, (3, 1))
 }
 
-pub fn second_star(pattern: &[&str]) -> usize {
+pub fn second_star(pattern: &[Vec<bool>]) -> usize {
   [(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
     .iter()
     .map(|&slope| trees_hit(pattern, slope))
@@ -33,8 +27,11 @@ pub fn second_star(pattern: &[&str]) -> usize {
 mod tests {
   use super::*;
 
-  fn input() -> Vec<&'static str> {
-    include_str!("../data/03.txt").lines().collect()
+  fn input() -> Vec<Vec<bool>> {
+    include_str!("../data/03.txt")
+      .lines()
+      .map(|line| line.chars().map(|c| c == '#').collect())
+      .collect()
   }
 
   #[test]

@@ -2,7 +2,10 @@ use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use epiphany::*;
 
 pub fn day03_benchmark(c: &mut Criterion) {
-  let input: Vec<_> = include_str!("../data/02.txt").lines().collect();
+  let input: Vec<_> = include_str!("../data/03.txt")
+    .lines()
+    .map(|line| line.chars().map(|c| c == '#').collect())
+    .collect();
 
   c.bench_function("part 1", |b| {
     b.iter(|| day03::first_star(black_box(&input)))
