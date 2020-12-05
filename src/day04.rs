@@ -10,7 +10,7 @@ pub struct Passport {
   hcl: Option<String>,
   ecl: Option<String>,
   pid: Option<String>,
-  cid: Option<String>,
+  _cid: Option<String>,
 }
 
 impl Passport {
@@ -74,7 +74,7 @@ impl FromStr for Passport {
       hcl: kv.get("hcl").cloned(),
       ecl: kv.get("ecl").cloned(),
       pid: kv.get("pid").cloned(),
-      cid: kv.get("cid").cloned(),
+      _cid: kv.get("cid").cloned(),
     })
   }
 }
