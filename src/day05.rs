@@ -1,44 +1,38 @@
-pub fn translate(seat_id: &str) -> (usize, usize) {
-  let row = seat_id.get(0..7).unwrap();
-  let col = seat_id.get(7..10).unwrap();
-
-  let row = row.replace("F", "0").replace("B", "1");
-  let col = col.replace("L", "0").replace("R", "1");
-
-  (
-    usize::from_str_radix(&row, 2).unwrap(),
-    usize::from_str_radix(&col, 2).unwrap(),
-  )
+pub fn translate(seat_id: &str) -> usize {
+  seat_id
+    .chars()
+    .map(|c| match c {
+      'F' => 0,
+      'B' => 1,
+      'L' => 0,
+      'R' => 1,
+      _ => unreachable!(),
+    })
+    .rev()
+    .enumerate()
+    .fold(0, |total, (i, bit)| total + (bit << i))
 }
 
 pub fn first_star(seat_ids: &[&str]) -> usize {
   seat_ids
     .iter()
     .map(|&seat_id| translate(seat_id))
-    .map(|(a, b)| a * 8 + b)
     .max()
-    .unwrap()
+    .expect("no max found")
 }
 
 pub fn second_star(seat_ids: &[&str]) -> usize {
-  let mut seat_ids: Vec<_> = seat_ids
-    .iter()
-    .map(|&seat_id| translate(seat_id))
-    .map(|(a, b)| a * 8 + b)
-    .collect();
+  let mut seat_ids: Vec<_> = seat_ids.iter().map(|&seat_id| translate(seat_id)).collect();
 
   seat_ids.sort();
 
   let res = seat_ids
     .windows(2)
-    .find(|&pair| {
-      if let [a, b] = pair {
-        *a + 1 != *b
-      } else {
-        false
-      }
+    .find(|&pair| match pair {
+      [a, b] => *a + 1 != *b,
+      _ => unreachable!(),
     })
-    .unwrap();
+    .expect("no missing seat found");
 
   res[0] + 1
 }
