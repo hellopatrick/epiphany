@@ -113,6 +113,6 @@ mod tests {
 
     let valid_passport_count = second_star(&passports);
 
-    assert_eq!(valid_passport_count, 1001);
+    assert_eq!(valid_passport_count, 111);
   }
 }
