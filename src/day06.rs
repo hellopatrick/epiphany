@@ -1,31 +1,25 @@
-use std::collections::HashMap;
+use std::collections::HashSet;
 
-fn yes_answers(group: &str) -> HashMap<char, usize> {
-  let mut map = HashMap::with_capacity(group.len());
+#[inline]
+fn uniq_chars(group: &str) -> HashSet<char> {
+  group.chars().filter(|c| c.is_alphabetic()).collect()
+}
 
-  for c in group.chars().filter(|c| c.is_alphabetic()) {
-    let counter = map.entry(c).or_insert(0);
-    *counter += 1;
-  }
+fn all_yes(group: &str) -> HashSet<char> {
+  let all: HashSet<_> = "abcdefghijklmnopqrstuvwxyz".chars().collect();
 
-  map
+  group
+    .lines()
+    .map(|line| uniq_chars(line))
+    .fold(all, |acc, next| acc.intersection(&next).copied().collect())
 }
 
 pub fn first_star(groups: &[&str]) -> usize {
-  groups.iter().map(|&group| yes_answers(group).len()).sum()
+  groups.iter().map(|&group| uniq_chars(group).len()).sum()
 }
 
 pub fn second_star(groups: &[&str]) -> usize {
-  groups
-    .iter()
-    .map(|&group| {
-      let members = group.lines().count();
-
-      let answer_counts = yes_answers(group);
-
-      answer_counts.iter().filter(|(_, &b)| b == members).count()
-    })
-    .sum()
+  groups.iter().map(|&group| all_yes(group).len()).sum()
 }
 
 #[cfg(test)]
